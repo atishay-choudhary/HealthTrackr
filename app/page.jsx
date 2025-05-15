@@ -54,7 +54,7 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-center">
                 <img
-                  src="/placeholder.svg?height=550&width=550"
+                  src="https://img.freepik.com/free-vector/sport-landing-page-template-with-photo_23-2148373719.jpg?t=st=1747301051~exp=1747304651~hmac=046b163bd0eea023ffab6099a1923bf52f9651329b60fe927789291861f0adc5&w=996?height=550&width=550"
                   alt="HealthTrackr Dashboard Preview"
                   width={550}
                   height={550}
