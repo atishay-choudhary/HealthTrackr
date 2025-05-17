@@ -8,13 +8,14 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "HealthTrackr - Personal Health Dashboard",
   description: "Track your health metrics and wellness journey",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider defaultTheme="system">
           {children}
           <Toaster />
         </ThemeProvider>
