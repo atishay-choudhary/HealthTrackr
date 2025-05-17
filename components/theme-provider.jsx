@@ -1,11 +1,17 @@
 "use client"
-
 import { createContext, useContext, useEffect, useState } from "react"
 
-const ThemeProviderContext = createContext({})
+const ThemeProviderContext = createContext({ theme: "light", setTheme: () => null })
 
-export function ThemeProvider({ children, defaultTheme = "system", storageKey = "vite-ui-theme", ...props }) {
+export function ThemeProvider({ children, defaultTheme = "system", storageKey = "ui-theme", ...props }) {
   const [theme, setTheme] = useState(defaultTheme)
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(storageKey)
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
+  }, [storageKey])
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -17,22 +23,16 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
       root.classList.add(systemTheme)
-      return
+    } else {
+      root.classList.add(theme)
     }
-
-    root.classList.add(theme)
   }, [theme])
 
   const value = {
     theme,
-    setTheme: (newTheme) => {
-      setTheme(newTheme)
-      // Save to localStorage
-      try {
-        localStorage.setItem(storageKey, newTheme)
-      } catch (e) {
-        console.error("Failed to save theme preference", e)
-      }
+    setTheme: (theme) => {
+      localStorage.setItem(storageKey, theme)
+      setTheme(theme)
     },
   }
 
@@ -46,7 +46,9 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
 
-  if (context === undefined) throw new Error("useTheme must be used within a ThemeProvider")
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider")
+  }
 
   return context
 }
