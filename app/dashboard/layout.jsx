@@ -11,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ThemeDebugger } from "@/components/theme-debugger"
 
 const navItems = [
   {
@@ -139,7 +138,6 @@ export default function DashboardLayout({ children }) {
         </div>
       </header>
       <main className="flex-1 container py-6">{children}</main>
-      <ThemeDebugger />
     </div>
   )
 }

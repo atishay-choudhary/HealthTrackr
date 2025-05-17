@@ -1,12 +1,15 @@
 "use client"
+
 import { createContext, useContext, useEffect, useState } from "react"
 
-const ThemeProviderContext = createContext({ theme: "light", setTheme: () => null })
+const ThemeProviderContext = createContext({})
 
 export function ThemeProvider({ children, defaultTheme = "system", storageKey = "ui-theme", ...props }) {
   const [theme, setTheme] = useState(defaultTheme)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const savedTheme = localStorage.getItem(storageKey)
     if (savedTheme) {
       setTheme(savedTheme)
@@ -14,25 +17,28 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
   }, [storageKey])
 
   useEffect(() => {
-    const root = window.document.documentElement
+    if (!mounted) return
 
-    // Remove all existing theme classes
+    const root = window.document.documentElement
     root.classList.remove("light", "dark")
 
-    // Add the current theme class
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
       root.classList.add(systemTheme)
     } else {
       root.classList.add(theme)
     }
-  }, [theme])
+  }, [theme, mounted])
 
   const value = {
     theme,
-    setTheme: (theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme) => {
+      setTheme(newTheme)
+      try {
+        localStorage.setItem(storageKey, newTheme)
+      } catch (e) {
+        console.error("Failed to save theme preference", e)
+      }
     },
   }
 
@@ -45,10 +51,8 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
-
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider")
   }
-
   return context
 }
