@@ -13,15 +13,33 @@ function useChart() {
   const context = React.useContext(ChartContext)
 
   if (!context) {
-    throw new Error("useChart must be used within a <ChartContainer />")
+    console.warn("useChart must be used within a <ChartContainer />")
+    // Return a default context instead of throwing
+    return { id: "default", config: {} }
   }
 
   return context
 }
 
-const ChartContainer = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("w-full", className)} {...props} />
-))
+const ChartContainer = React.forwardRef(({ className, config = {}, ...props }, ref) => {
+  const id = React.useId()
+
+  // Provide a default context value
+  const contextValue = React.useMemo(
+    () => ({
+      id,
+      config: config || {},
+    }),
+    [id, config],
+  )
+
+  return (
+    <ChartContext.Provider value={contextValue}>
+      {config && <ChartStyle id={id} config={config} />}
+      <div ref={ref} data-chart={id} className={cn("w-full", className)} {...props} />
+    </ChartContext.Provider>
+  )
+})
 ChartContainer.displayName = "ChartContainer"
 
 const ChartStyle = ({ id, config }) => {
@@ -77,7 +95,7 @@ const ChartLegendItem = React.forwardRef(({ className, name, color, ...props }, 
 ChartLegendItem.displayName = "ChartLegendItem"
 
 const ChartLegendContent = React.forwardRef(
-  ({ className, hideIcon = false, payload, verticalAlign = "bottom", nameKey }, ref) => {
+  ({ className, hideIcon = false, payload = [], verticalAlign = "bottom", nameKey }, ref) => {
     const { config } = useChart()
 
     if (!payload?.length) {
@@ -89,13 +107,15 @@ const ChartLegendContent = React.forwardRef(
         ref={ref}
         className={cn("flex items-center justify-center gap-4", verticalAlign === "top" ? "pb-3" : "pt-3", className)}
       >
-        {payload.map((item) => {
+        {payload.map((item, index) => {
+          if (!item) return null
+
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
             <div
-              key={item.value}
+              key={index}
               className={cn("flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground")}
             >
               {itemConfig?.icon && !hideIcon ? (
@@ -108,7 +128,7 @@ const ChartLegendContent = React.forwardRef(
                   }}
                 />
               )}
-              {itemConfig?.label}
+              {itemConfig?.label || item.value}
             </div>
           )
         })}

@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from "react"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendItem } from "@/components/ui/chart"
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts"
 
@@ -56,6 +57,20 @@ const data = [
 ]
 
 export function HealthMetricsChart() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="h-[300px] flex items-center justify-center">
+        <div className="animate-pulse h-full w-full bg-muted rounded-md"></div>
+      </div>
+    )
+  }
+
   return (
     <ChartContainer>
       <ChartLegend className="justify-center mb-4">
@@ -116,33 +131,33 @@ export function HealthMetricsChart() {
 }
 
 function CustomTooltip({ active, payload, label }) {
-  if (active && payload && payload.length) {
-    return (
-      <ChartTooltip>
-        <ChartTooltipContent>
-          <div className="font-bold">{label}</div>
-          <div className="flex flex-col gap-1 mt-2">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-red-500" />
-              <span>Calories: {payload[0].value}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-blue-500" />
-              <span>Water: {payload[1].value}L</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-green-500" />
-              <span>Steps: {payload[2].value}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-purple-500" />
-              <span>Sleep: {payload[3].value} hrs</span>
-            </div>
-          </div>
-        </ChartTooltipContent>
-      </ChartTooltip>
-    )
+  if (!active || !payload || !payload.length) {
+    return null
   }
 
-  return null
+  return (
+    <ChartTooltip>
+      <ChartTooltipContent>
+        <div className="font-bold">{label}</div>
+        <div className="flex flex-col gap-1 mt-2">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-red-500" />
+            <span>Calories: {payload[0]?.value}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-blue-500" />
+            <span>Water: {payload[1]?.value}L</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-green-500" />
+            <span>Steps: {payload[2]?.value}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-purple-500" />
+            <span>Sleep: {payload[3]?.value} hrs</span>
+          </div>
+        </div>
+      </ChartTooltipContent>
+    </ChartTooltip>
+  )
 }

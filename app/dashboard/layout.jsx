@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -11,39 +11,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-
-const navItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: Home,
-  },
-  {
-    title: "Log Entry",
-    href: "/dashboard/log",
-    icon: PlusCircle,
-  },
-  {
-    title: "Calendar",
-    href: "/dashboard/calendar",
-    icon: Calendar,
-  },
-  {
-    title: "Progress",
-    href: "/dashboard/progress",
-    icon: LineChart,
-  },
-  {
-    title: "Reports",
-    href: "/dashboard/reports",
-    icon: BarChart3,
-  },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
-]
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
@@ -64,17 +31,26 @@ export default function DashboardLayout({ children }) {
     router.push("/")
   }
 
+  // Return a skeleton layout until client-side code is hydrated
   if (!isMounted) {
-    // Return a skeleton or simple layout that matches the structure
-    // but doesn't depend on client-side data
     return (
       <div className="flex min-h-screen flex-col">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-14 items-center">{/* Minimal header content */}</div>
+          <div className="container flex h-14 items-center">
+            <div className="mr-4 flex">
+              <div className="mr-6 flex items-center space-x-2">
+                <div className="h-8 w-8 rounded-full bg-muted"></div>
+                <div className="h-5 w-32 bg-muted rounded"></div>
+              </div>
+            </div>
+            <div className="flex flex-1 items-center justify-end space-x-4">
+              <div className="h-8 w-8 rounded-full bg-muted"></div>
+              <div className="h-8 w-8 rounded-full bg-muted"></div>
+            </div>
+          </div>
         </header>
         <main className="flex-1 container py-6">
-          {/* Loading state or minimal content */}
-          <div className="animate-pulse">
+          <div className="animate-pulse space-y-4">
             <div className="h-8 w-64 bg-muted rounded mb-4"></div>
             <div className="h-4 w-full bg-muted rounded mb-2"></div>
             <div className="h-4 w-full bg-muted rounded mb-2"></div>
@@ -91,6 +67,13 @@ export default function DashboardLayout({ children }) {
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
             <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
+              <img
+                src="/health-tech-logo.png"
+                alt="HealthTrackr Logo"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
               <span className="font-bold text-xl">HealthTrackr</span>
             </Link>
             <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -117,6 +100,13 @@ export default function DashboardLayout({ children }) {
             </SheetTrigger>
             <SheetContent side="left" className="pr-0">
               <Link href="/dashboard" className="flex items-center space-x-2">
+                <img
+                  src="/health-tech-logo.png"
+                  alt="HealthTrackr Logo"
+                  width={24}
+                  height={24}
+                  className="object-contain"
+                />
                 <span className="font-bold text-xl">HealthTrackr</span>
               </Link>
               <nav className="mt-8 flex flex-col space-y-3">
@@ -154,7 +144,53 @@ export default function DashboardLayout({ children }) {
           </div>
         </div>
       </header>
-      <main className="flex-1 container py-6">{children}</main>
+      <main className="flex-1 container py-6">
+        <Suspense
+          fallback={
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 w-64 bg-muted rounded mb-4"></div>
+              <div className="h-4 w-full bg-muted rounded mb-2"></div>
+              <div className="h-4 w-full bg-muted rounded mb-2"></div>
+              <div className="h-4 w-3/4 bg-muted rounded"></div>
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
+      </main>
     </div>
   )
 }
+
+const navItems = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: Home,
+  },
+  {
+    title: "Log Entry",
+    href: "/dashboard/log",
+    icon: PlusCircle,
+  },
+  {
+    title: "Calendar",
+    href: "/dashboard/calendar",
+    icon: Calendar,
+  },
+  {
+    title: "Progress",
+    href: "/dashboard/progress",
+    icon: LineChart,
+  },
+  {
+    title: "Reports",
+    href: "/dashboard/reports",
+    icon: BarChart3,
+  },
+  {
+    title: "Settings",
+    href: "/dashboard/settings",
+    icon: Settings,
+  },
+]

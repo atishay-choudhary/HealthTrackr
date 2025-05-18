@@ -30,8 +30,12 @@ export default function LoginPage() {
         description: "Welcome back to HealthTrackr!",
       })
 
-      router.push("/dashboard")
+      // Use a small delay before navigation to ensure toast is shown
+      setTimeout(() => {
+        router.push("/dashboard")
+      }, 500)
     } catch (error) {
+      console.error("Login error:", error)
       toast({
         title: "Login failed",
         description: "Please check your credentials and try again.",
