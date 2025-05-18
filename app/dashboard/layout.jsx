@@ -65,7 +65,24 @@ export default function DashboardLayout({ children }) {
   }
 
   if (!isMounted) {
-    return null
+    // Return a skeleton or simple layout that matches the structure
+    // but doesn't depend on client-side data
+    return (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-14 items-center">{/* Minimal header content */}</div>
+        </header>
+        <main className="flex-1 container py-6">
+          {/* Loading state or minimal content */}
+          <div className="animate-pulse">
+            <div className="h-8 w-64 bg-muted rounded mb-4"></div>
+            <div className="h-4 w-full bg-muted rounded mb-2"></div>
+            <div className="h-4 w-full bg-muted rounded mb-2"></div>
+            <div className="h-4 w-3/4 bg-muted rounded"></div>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (

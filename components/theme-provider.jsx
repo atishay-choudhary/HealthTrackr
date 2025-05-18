@@ -4,17 +4,20 @@ import { createContext, useContext, useEffect, useState } from "react"
 
 const ThemeProviderContext = createContext({})
 
-export function ThemeProvider({ children, defaultTheme = "system", storageKey = "ui-theme", ...props }) {
+export function ThemeProvider({ children, defaultTheme = "dark", storageKey = "ui-theme", ...props }) {
   const [theme, setTheme] = useState(defaultTheme)
   const [mounted, setMounted] = useState(false)
 
+  // Only run this effect on the client
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem(storageKey)
     if (savedTheme) {
       setTheme(savedTheme)
+    } else {
+      localStorage.setItem(storageKey, defaultTheme)
     }
-  }, [storageKey])
+  }, [defaultTheme, storageKey])
 
   useEffect(() => {
     if (!mounted) return
@@ -42,6 +45,8 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
     },
   }
 
+  // Avoid rendering theme-dependent content until mounted
+  // This prevents hydration mismatch
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
       {children}

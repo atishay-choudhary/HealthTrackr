@@ -9,6 +9,13 @@ export default function Home() {
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
+              <img
+                src="/health-tech-logo.png"
+                alt="HealthTrackr Logo"
+                width={32}
+                height={32}
+                className="object-contain"
+              />
               <span className="font-bold text-xl">HealthTrackr</span>
             </Link>
           </div>
@@ -53,13 +60,21 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex items-center justify-center">
-                <img
-                  src="/placeholder.svg?height=550&width=550"
-                  alt="HealthTrackr Dashboard Preview"
-                  width={550}
-                  height={550}
-                  className="rounded-lg object-cover"
-                />
+                <div className="flex flex-col items-center">
+                  <img
+                    src="/health-tech-logo.png"
+                    alt="HealthTrackr Logo"
+                    width={400}
+                    height={400}
+                    className="object-contain mb-4"
+                  />
+                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <h3 className="text-xl font-semibold mb-2">Smart Health Tracking</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Powered by advanced analytics and personalized insights
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
