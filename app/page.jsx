@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 
 export default function Home() {
   return (
@@ -49,7 +48,21 @@ export default function Home() {
                   <Link href="/register">
                     <Button size="lg" className="gap-1.5">
                       Get Started
-                      <ArrowRight className="h-4 w-4" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-4 w-4"
+                      >
+                        <path d="M5 12h14"></path>
+                        <path d="m12 5 7 7-7 7"></path>
+                      </svg>
                     </Button>
                   </Link>
                   <Link href="/about">

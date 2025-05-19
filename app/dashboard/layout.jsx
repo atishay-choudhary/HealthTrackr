@@ -5,12 +5,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { BarChart3, Calendar, Home, LineChart, LogOut, Menu, PlusCircle, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Icons } from "@/components/ui/icons"
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="mr-2 md:hidden">
-                <Menu className="h-5 w-5" />
+                <Icons.Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
@@ -138,7 +138,7 @@ export default function DashboardLayout({ children }) {
                 </Avatar>
               </Button>
               <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Logout">
-                <LogOut className="h-5 w-5" />
+                <Icons.LogOut className="h-5 w-5" />
               </Button>
             </nav>
           </div>
@@ -166,31 +166,31 @@ const navItems = [
   {
     title: "Dashboard",
     href: "/dashboard",
-    icon: Home,
+    icon: Icons.Home,
   },
   {
     title: "Log Entry",
     href: "/dashboard/log",
-    icon: PlusCircle,
+    icon: Icons.PlusCircle,
   },
   {
     title: "Calendar",
     href: "/dashboard/calendar",
-    icon: Calendar,
+    icon: Icons.Calendar,
   },
   {
     title: "Progress",
     href: "/dashboard/progress",
-    icon: LineChart,
+    icon: Icons.LineChart,
   },
   {
     title: "Reports",
     href: "/dashboard/reports",
-    icon: BarChart3,
+    icon: Icons.BarChart,
   },
   {
     title: "Settings",
     href: "/dashboard/settings",
-    icon: Settings,
+    icon: Icons.Settings,
   },
 ]

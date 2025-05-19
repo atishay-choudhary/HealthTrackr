@@ -4,10 +4,10 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, PlusCircle } from "lucide-react"
 import Link from "next/link"
 import { ErrorBoundary } from "@/components/error-boundary"
 import dynamic from "next/dynamic"
+import { Icons } from "@/components/ui/icons"
 
 export default function DashboardPage() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -30,13 +30,13 @@ export default function DashboardPage() {
         <div className="flex items-center space-x-2">
           <Link href="/dashboard/log">
             <Button>
-              <PlusCircle className="mr-2 h-4 w-4" />
+              <Icons.PlusCircle className="mr-2 h-4 w-4" />
               Log Entry
             </Button>
           </Link>
           <Link href="/dashboard/calendar">
             <Button variant="outline">
-              <CalendarIcon className="mr-2 h-4 w-4" />
+              <Icons.Calendar className="mr-2 h-4 w-4" />
               Calendar
             </Button>
           </Link>
