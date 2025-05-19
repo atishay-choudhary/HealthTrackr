@@ -8,7 +8,10 @@ export function ErrorBoundaryWrapper({ children }) {
 
   // Only render children after component has mounted to avoid hydration issues
   useEffect(() => {
-    setMounted(true)
+    const timer = setTimeout(() => {
+      setMounted(true)
+    }, 100)
+    return () => clearTimeout(timer)
   }, [])
 
   if (!mounted) {

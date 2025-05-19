@@ -23,7 +23,7 @@ export default function DashboardLayout({ children }) {
     // Delay setting isMounted to ensure all client-side code is ready
     const timer = setTimeout(() => {
       setIsMounted(true)
-    }, 100)
+    }, 500) // Increased delay for better stability
 
     return () => clearTimeout(timer)
   }, [])
@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }) {
     // Add a small delay before navigation to ensure toast is shown
     setTimeout(() => {
       router.push("/")
-    }, 300)
+    }, 500)
   }
 
   // Return a skeleton layout until client-side code is hydrated

@@ -29,17 +29,12 @@ export class ErrorBoundary extends Component {
           <h3 className="text-lg font-medium text-red-800 dark:text-red-200">Something went wrong</h3>
           <div className="mt-4 text-sm text-red-700 dark:text-red-300">
             <p>An error occurred while rendering this component.</p>
-            {this.state.error && (
-              <pre className="mt-2 p-2 bg-red-100 dark:bg-red-900/40 rounded overflow-auto text-xs">
-                {this.state.error.toString()}
-              </pre>
-            )}
           </div>
           <Button
             className="mt-4 bg-red-600 hover:bg-red-700 text-white"
             onClick={() => {
               this.setState({ hasError: false, error: null, errorInfo: null })
-              this.props.onReset?.()
+              window.location.reload()
             }}
           >
             Try Again
