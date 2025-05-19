@@ -9,11 +9,47 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import dynamic from "next/dynamic"
 import { Icons } from "@/components/ui/icons"
 
+// Safely load components with error handling
+const SafeWaterIntakeCard = dynamic(
+  () => import("@/components/dashboard/water-intake-card").then((mod) => ({ default: mod.WaterIntakeCard })),
+  { ssr: false, loading: () => <CardSkeleton /> },
+)
+
+const SafeSleepQualityCard = dynamic(
+  () => import("@/components/dashboard/sleep-quality-card").then((mod) => ({ default: mod.SleepQualityCard })),
+  { ssr: false, loading: () => <CardSkeleton /> },
+)
+
+const SafeStreakCard = dynamic(
+  () => import("@/components/dashboard/streak-card").then((mod) => ({ default: mod.StreakCard })),
+  { ssr: false, loading: () => <CardSkeleton /> },
+)
+
+const SafeWellnessTipCard = dynamic(
+  () => import("@/components/dashboard/wellness-tip-card").then((mod) => ({ default: mod.WellnessTipCard })),
+  { ssr: false, loading: () => <CardSkeleton /> },
+)
+
+const SafeNutritionSummaryCard = dynamic(
+  () => import("@/components/dashboard/nutrition-summary-card").then((mod) => ({ default: mod.NutritionSummaryCard })),
+  { ssr: false, loading: () => <CardSkeleton height="400px" /> },
+)
+
+const SafeActivitySummaryCard = dynamic(
+  () => import("@/components/dashboard/activity-summary-card").then((mod) => ({ default: mod.ActivitySummaryCard })),
+  { ssr: false, loading: () => <CardSkeleton height="400px" /> },
+)
+
 export default function DashboardPage() {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    setIsLoaded(true)
+    // Delay setting isLoaded to ensure all client-side code is ready
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+    }, 300)
+
+    return () => clearTimeout(timer)
   }, [])
 
   if (!isLoaded) {
@@ -54,16 +90,16 @@ export default function DashboardPage() {
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <ErrorBoundary fallback={<CardSkeleton />}>
-              <SafeComponent component="WaterIntakeCard" />
+              <SafeWaterIntakeCard />
             </ErrorBoundary>
             <ErrorBoundary fallback={<CardSkeleton />}>
-              <SafeComponent component="SleepQualityCard" />
+              <SafeSleepQualityCard />
             </ErrorBoundary>
             <ErrorBoundary fallback={<CardSkeleton />}>
-              <SafeComponent component="StreakCard" />
+              <SafeStreakCard />
             </ErrorBoundary>
             <ErrorBoundary fallback={<CardSkeleton />}>
-              <SafeComponent component="WellnessTipCard" />
+              <SafeWellnessTipCard />
             </ErrorBoundary>
           </div>
 
@@ -75,7 +111,9 @@ export default function DashboardPage() {
                   <CardDescription>Your health metrics over the past 7 days</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <SafeComponent component="HealthMetricsChart" />
+                  <div className="h-[300px] flex items-center justify-center">
+                    <p className="text-muted-foreground">Health metrics visualization</p>
+                  </div>
                 </CardContent>
               </Card>
             </ErrorBoundary>
@@ -136,81 +174,24 @@ export default function DashboardPage() {
 
         <TabsContent value="nutrition" className="space-y-4">
           <ErrorBoundary fallback={<CardSkeleton height="400px" />}>
-            <SafeComponent component="NutritionSummaryCard" />
+            <SafeNutritionSummaryCard />
           </ErrorBoundary>
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-4">
           <ErrorBoundary fallback={<CardSkeleton height="400px" />}>
-            <SafeComponent component="ActivitySummaryCard" />
+            <SafeActivitySummaryCard />
           </ErrorBoundary>
         </TabsContent>
 
         <TabsContent value="sleep" className="space-y-4">
           <ErrorBoundary fallback={<CardSkeleton height="400px" />}>
-            <SafeComponent component="SleepQualityCard" detailed={true} />
+            <SafeSleepQualityCard detailed={true} />
           </ErrorBoundary>
         </TabsContent>
       </Tabs>
     </div>
   )
-}
-
-// Safe component loader
-function SafeComponent({ component, ...props }) {
-  const components = {
-    WaterIntakeCard: dynamic(
-      () => import("@/components/dashboard/water-intake-card").then((mod) => mod.WaterIntakeCard),
-      {
-        ssr: false,
-        loading: () => <CardSkeleton />,
-      },
-    ),
-    SleepQualityCard: dynamic(
-      () => import("@/components/dashboard/sleep-quality-card").then((mod) => mod.SleepQualityCard),
-      {
-        ssr: false,
-        loading: () => <CardSkeleton />,
-      },
-    ),
-    StreakCard: dynamic(() => import("@/components/dashboard/streak-card").then((mod) => mod.StreakCard), {
-      ssr: false,
-      loading: () => <CardSkeleton />,
-    }),
-    WellnessTipCard: dynamic(
-      () => import("@/components/dashboard/wellness-tip-card").then((mod) => mod.WellnessTipCard),
-      {
-        ssr: false,
-        loading: () => <CardSkeleton />,
-      },
-    ),
-    HealthMetricsChart: dynamic(
-      () => import("@/components/dashboard/health-metrics-chart").then((mod) => mod.HealthMetricsChart),
-      {
-        ssr: false,
-        loading: () => <div className="h-[300px] flex items-center justify-center">Loading chart...</div>,
-      },
-    ),
-    NutritionSummaryCard: dynamic(
-      () => import("@/components/dashboard/nutrition-summary-card").then((mod) => mod.NutritionSummaryCard),
-      {
-        ssr: false,
-        loading: () => <CardSkeleton height="400px" />,
-      },
-    ),
-    ActivitySummaryCard: dynamic(
-      () => import("@/components/dashboard/activity-summary-card").then((mod) => mod.ActivitySummaryCard),
-      {
-        ssr: false,
-        loading: () => <CardSkeleton height="400px" />,
-      },
-    ),
-  }
-
-  const Component = components[component]
-  if (!Component) return null
-
-  return <Component {...props} />
 }
 
 // Skeleton components

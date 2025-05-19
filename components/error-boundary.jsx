@@ -1,11 +1,12 @@
 "use client"
 
 import { Component } from "react"
+import { Button } from "@/components/ui/button"
 
 export class ErrorBoundary extends Component {
   constructor(props) {
     super(props)
-    this.state = { hasError: false, error: null }
+    this.state = { hasError: false, error: null, errorInfo: null }
   }
 
   static getDerivedStateFromError(error) {
@@ -14,6 +15,7 @@ export class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("Error caught by ErrorBoundary:", error, errorInfo)
+    this.setState({ errorInfo })
   }
 
   render() {
@@ -23,11 +25,25 @@ export class ErrorBoundary extends Component {
       }
 
       return (
-        <div className="p-4 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Something went wrong</h3>
-          <div className="mt-2 text-sm text-red-700 dark:text-red-300">
+        <div className="p-6 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-200">Something went wrong</h3>
+          <div className="mt-4 text-sm text-red-700 dark:text-red-300">
             <p>An error occurred while rendering this component.</p>
+            {this.state.error && (
+              <pre className="mt-2 p-2 bg-red-100 dark:bg-red-900/40 rounded overflow-auto text-xs">
+                {this.state.error.toString()}
+              </pre>
+            )}
           </div>
+          <Button
+            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+            onClick={() => {
+              this.setState({ hasError: false, error: null, errorInfo: null })
+              this.props.onReset?.()
+            }}
+          >
+            Try Again
+          </Button>
         </div>
       )
     }

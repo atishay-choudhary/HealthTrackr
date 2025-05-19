@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/ui/icons"
+import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
@@ -19,7 +20,12 @@ export default function DashboardLayout({ children }) {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true)
+    // Delay setting isMounted to ensure all client-side code is ready
+    const timer = setTimeout(() => {
+      setIsMounted(true)
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [])
 
   const handleLogout = () => {
@@ -28,37 +34,16 @@ export default function DashboardLayout({ children }) {
       title: "Logged out",
       description: "You have been successfully logged out.",
     })
-    router.push("/")
+
+    // Add a small delay before navigation to ensure toast is shown
+    setTimeout(() => {
+      router.push("/")
+    }, 300)
   }
 
   // Return a skeleton layout until client-side code is hydrated
   if (!isMounted) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container flex h-14 items-center">
-            <div className="mr-4 flex">
-              <div className="mr-6 flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-full bg-muted"></div>
-                <div className="h-5 w-32 bg-muted rounded"></div>
-              </div>
-            </div>
-            <div className="flex flex-1 items-center justify-end space-x-4">
-              <div className="h-8 w-8 rounded-full bg-muted"></div>
-              <div className="h-8 w-8 rounded-full bg-muted"></div>
-            </div>
-          </div>
-        </header>
-        <main className="flex-1 container py-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-64 bg-muted rounded mb-4"></div>
-            <div className="h-4 w-full bg-muted rounded mb-2"></div>
-            <div className="h-4 w-full bg-muted rounded mb-2"></div>
-            <div className="h-4 w-3/4 bg-muted rounded"></div>
-          </div>
-        </main>
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   return (
@@ -145,18 +130,49 @@ export default function DashboardLayout({ children }) {
         </div>
       </header>
       <main className="flex-1 container py-6">
-        <Suspense
-          fallback={
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 w-64 bg-muted rounded mb-4"></div>
-              <div className="h-4 w-full bg-muted rounded mb-2"></div>
-              <div className="h-4 w-full bg-muted rounded mb-2"></div>
-              <div className="h-4 w-3/4 bg-muted rounded"></div>
+        <ErrorBoundaryWrapper>
+          <Suspense
+            fallback={
+              <div className="animate-pulse space-y-4">
+                <div className="h-8 w-64 bg-muted rounded mb-4"></div>
+                <div className="h-4 w-full bg-muted rounded mb-2"></div>
+                <div className="h-4 w-full bg-muted rounded mb-2"></div>
+                <div className="h-4 w-3/4 bg-muted rounded"></div>
+              </div>
+            }
+          >
+            {children}
+          </Suspense>
+        </ErrorBoundaryWrapper>
+      </main>
+    </div>
+  )
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center">
+          <div className="mr-4 flex">
+            <div className="mr-6 flex items-center space-x-2">
+              <div className="h-8 w-8 rounded-full bg-muted"></div>
+              <div className="h-5 w-32 bg-muted rounded"></div>
             </div>
-          }
-        >
-          {children}
-        </Suspense>
+          </div>
+          <div className="flex flex-1 items-center justify-end space-x-4">
+            <div className="h-8 w-8 rounded-full bg-muted"></div>
+            <div className="h-8 w-8 rounded-full bg-muted"></div>
+          </div>
+        </div>
+      </header>
+      <main className="flex-1 container py-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 w-64 bg-muted rounded mb-4"></div>
+          <div className="h-4 w-full bg-muted rounded mb-2"></div>
+          <div className="h-4 w-full bg-muted rounded mb-2"></div>
+          <div className="h-4 w-3/4 bg-muted rounded"></div>
+        </div>
       </main>
     </div>
   )
