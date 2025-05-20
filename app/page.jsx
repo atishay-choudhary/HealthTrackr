@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Logo } from "@/components/logo"
 
 export default function Home() {
   return (
@@ -8,13 +9,7 @@ export default function Home() {
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
             <Link href="/" className="mr-6 flex items-center space-x-2">
-              <img
-                src="/health-tech-logo.png"
-                alt="HealthTrackr Logo"
-                width={32}
-                height={32}
-                className="object-contain"
-              />
+              <Logo size="small" />
               <span className="font-bold text-xl">HealthTrackr</span>
             </Link>
           </div>
@@ -74,14 +69,8 @@ export default function Home() {
               </div>
               <div className="flex items-center justify-center">
                 <div className="flex flex-col items-center">
-                  <img
-                    src="/health-tech-logo.png"
-                    alt="HealthTrackr Logo"
-                    width={400}
-                    height={400}
-                    className="object-contain mb-4"
-                  />
-                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <Logo size="large" />
+                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg mt-4">
                     <h3 className="text-xl font-semibold mb-2">Smart Health Tracking</h3>
                     <p className="text-gray-600 dark:text-gray-300">
                       Powered by advanced analytics and personalized insights
@@ -162,7 +151,7 @@ const features = [
           strokeLinejoin="round"
         >
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          <path d="m19 9-5 5-4-4-3 3" />
         </svg>
       )
     },

@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/ui/icons"
 import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
+import { Logo } from "@/components/logo"
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname()
@@ -52,13 +53,7 @@ export default function DashboardLayout({ children }) {
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
             <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
-              <img
-                src="/health-tech-logo.png"
-                alt="HealthTrackr Logo"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
+              <Logo size="small" />
               <span className="font-bold text-xl">HealthTrackr</span>
             </Link>
             <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -85,13 +80,7 @@ export default function DashboardLayout({ children }) {
             </SheetTrigger>
             <SheetContent side="left" className="pr-0">
               <Link href="/dashboard" className="flex items-center space-x-2">
-                <img
-                  src="/health-tech-logo.png"
-                  alt="HealthTrackr Logo"
-                  width={24}
-                  height={24}
-                  className="object-contain"
-                />
+                <Logo size="small" />
                 <span className="font-bold text-xl">HealthTrackr</span>
               </Link>
               <nav className="mt-8 flex flex-col space-y-3">
